@@ -7,26 +7,40 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+
+
 public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     private ImageIcon titleImage;
+    private static final int[  ] snakeAddress = {0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760}; // snakeAddress[0] - 19
+    private int[] snakeDATAX = new int[20];//Can be : 0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760
+    private int[] snakeDATAY = new int[20];//Can be : 0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760
 
-    private static final int[  ] snakeAddress = {0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760};
-    private int[] snakeXposition = new int[20];
-    private int[] snakeYposition = new int[20];
+    private int snakeXaddress = 0;
+    private int snakeYaddress = 0;
 
     private boolean leftGoing = false;
     private boolean rightGoing = false;
     private boolean upGoing = false;
     private boolean downGoing = false;
+
     private ImageIcon snakeHeadImage;
     private ImageIcon snakeBodyImage;
+    private ImageIcon snakeEmptyImage;
+
     private Timer timer;
+
     private int delay = 100;
     private int lengthOfSnake = 3;
     private int moves = 0;
 
 
+
+
+
+    /**************************************************************************
+     Default Things to setup for Class
+     **************************************************************************/
     public Gameplay() {
         addKeyListener(this);
         setFocusable(true);
@@ -36,25 +50,34 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     }
 
-    public void paint(Graphics graphics) {
 
+
+
+    /**************************************************************************
+     DEFINES
+     **************************************************************************/
+    public void paint(Graphics graphics) {
         if (moves == 0) {
-            snakeXposition[2] = 0;
+            snakeBodyImage = new ImageIcon("Body.png");
+            snakeHeadImage = new ImageIcon("Head.png");
+            snakeEmptyImage = new ImageIcon("Empty.png");
+            graphics.setColor(Color.WHITE);
+            /*snakeXposition[2] = 0;
             snakeXposition[1] = 40;
             snakeXposition[0] = 80;
 
             snakeYposition[2] = 0;
             snakeYposition[1] = 0;
             snakeYposition[0] = 0;
-        }
-        graphics.setColor(Color.WHITE);
-        snakeBodyImage = new ImageIcon("Body.png");
-        snakeHeadImage = new ImageIcon("Head.png");
-        snakeHeadImage.paintIcon(this, graphics, snakeXposition[0], snakeYposition[0]);
-        snakeBodyImage.paintIcon(this, graphics, snakeXposition[1], snakeYposition[1]);
-        snakeBodyImage.paintIcon(this, graphics, snakeXposition[2], snakeYposition[2]);
 
-        for (int a = 0; a < lengthOfSnake; a++) {
+
+            snakeHeadImage.paintIcon(this, graphics, snakeXposition[0], snakeYposition[0]);
+            snakeBodyImage.paintIcon(this, graphics, snakeXposition[1], snakeYposition[1]);
+            snakeBodyImage.paintIcon(this, graphics, snakeXposition[2], snakeYposition[2]);*/
+        }
+        snakeHeadImage.paintIcon(this, graphics, snakeDATAX[snakeXaddress], snakeDATAY[snakeYaddress]);
+
+        /*for (int a = 0; a < lengthOfSnake; a++) {
             if (a == 0) {
                 if (upGoing || downGoing|| leftGoing|| rightGoing) {
                     snakeHeadImage.paintIcon(this, graphics, snakeXposition[a], snakeYposition[a]);
@@ -62,48 +85,89 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             } else if (a != 0) {
                 snakeBodyImage.paintIcon(this, graphics, snakeXposition[a], snakeYposition[a]);
             }
-        }
+        }*/
 
         graphics.dispose();
-
-
     }
 
+
+
+
+
+    /**************************************************************************
+     Timer CALL
+     **************************************************************************/
     @Override
     public void actionPerformed(ActionEvent e) {
         timer.start();
+        /*for (int x = 0; x < 20; x++) {
+            for (int y = 0; y < 20; y++) {
+                snakeDATAX[x]=25;
+                snakeDATAY[y]=25;
+            }
+        }*/
+
+
+        //snakeDATAX[snakeXaddress] = 25;
+       // snakeDATAY[snakeXaddress] = 25;
         if (rightGoing) {
-            for (int r = lengthOfSnake - 1; r >= 0; r--) {
-                snakeYposition[r + 1] = snakeYposition[r];
+            System.out.println("rightGoing");
+            snakeXaddress++;
+            if (snakeXaddress >= 20) {
+                snakeXaddress = 0;
             }
-            for (int r = lengthOfSnake; r >= 0; r--) {
-                snakeYposition[r + 1] = snakeYposition[r];
-                if (r == 0) {
-                    snakeXposition[r] = snakeXposition[r] + 40;
-                } else {
-                    snakeXposition[r] = snakeXposition[r - 1];
-                }
-                if (snakeXposition[r] > 800) {
-                    snakeXposition[r] = 0;
-                }
+            snakeDATAX[snakeXaddress] = snakeAddress[snakeXaddress];
+        }
+        else if (leftGoing) {
+            System.out.println("leftGoing");
+            snakeXaddress--;
+            if (snakeXaddress < 0) {
+                snakeXaddress = 19;
             }
+            snakeDATAX[snakeXaddress] = snakeAddress[snakeXaddress];
         }
-        if (leftGoing) {
+
+        else if (downGoing) {
+            System.out.println("downGoing");
+            snakeYaddress++;
+            if (snakeYaddress >= 20) {
+                snakeYaddress = 0;
+            }
+            snakeDATAY[snakeYaddress] = snakeAddress[snakeYaddress];
+        }
+        else if (upGoing) {
+            System.out.println("upGoing");
+            snakeYaddress--;
+            if (snakeYaddress < 0) {
+                snakeYaddress = 19;
+            }
+            snakeDATAY[snakeYaddress] = snakeAddress[snakeYaddress];
 
         }
-        if (upGoing) {
 
-        }
-        if (downGoing) {
 
-        }
+
+        repaint();
+
     }
 
+
+
+
+    /**************************************************************************
+     EMPTY
+     **************************************************************************/
     @Override
     public void keyTyped(KeyEvent e) {
 
     }
 
+
+
+
+    /**************************************************************************
+     KEY PRESS TRIGGER
+     **************************************************************************/
     @Override
     public void keyPressed(KeyEvent e) {
 
@@ -159,6 +223,12 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         }
     }
 
+
+
+
+    /**************************************************************************
+     EMPTY
+     **************************************************************************/
     @Override
     public void keyReleased(KeyEvent e) {
 
