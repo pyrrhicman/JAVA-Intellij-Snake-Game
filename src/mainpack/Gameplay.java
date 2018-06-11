@@ -17,6 +17,8 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     private int[] snakeDATAY = new int[20];//Can be : 0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760
 
     private int snakeXaddress = 0;
+    private int snakeOLDX=0;
+    private int snakeOLDY=0;
     private int snakeYaddress = 0;
 
     private boolean leftGoing = false;
@@ -75,6 +77,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             snakeBodyImage.paintIcon(this, graphics, snakeXposition[1], snakeYposition[1]);
             snakeBodyImage.paintIcon(this, graphics, snakeXposition[2], snakeYposition[2]);*/
         }
+        snakeEmptyImage.paintIcon(this, graphics, snakeDATAX[snakeOLDX], snakeDATAY[snakeOLDY]);
         snakeHeadImage.paintIcon(this, graphics, snakeDATAX[snakeXaddress], snakeDATAY[snakeYaddress]);
 
         /*for (int a = 0; a < lengthOfSnake; a++) {
@@ -110,6 +113,8 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
         //snakeDATAX[snakeXaddress] = 25;
        // snakeDATAY[snakeXaddress] = 25;
+        snakeOLDX = snakeXaddress;
+        snakeOLDY = snakeYaddress;
         if (rightGoing) {
             System.out.println("rightGoing");
             snakeXaddress++;

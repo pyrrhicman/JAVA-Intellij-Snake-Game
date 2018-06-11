@@ -8,7 +8,7 @@ public class Main {
         JFrame obj = new JFrame();
         Gameplay gameplay = new Gameplay();
 
-        obj.setBounds(100, 100, 840, 840);
+        obj.setBounds(100, 100, 820, 840);
         obj.setBackground(Color.WHITE);
         //obj.setResizable(false);
         obj.setTitle("Snake Game");
