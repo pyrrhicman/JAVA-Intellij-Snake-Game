@@ -8,18 +8,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 
-
 public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     private ImageIcon titleImage;
-    private static final int[  ] snakeAddress = {0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760}; // snakeAddress[0] - 19
-    private int[] snakeDATAX = new int[20];//Can be : 0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760
-    private int[] snakeDATAY = new int[20];//Can be : 0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760
 
-    private int snakeXaddress = 0;
-    private int snakeOLDX=0;
-    private int snakeOLDY=0;
-    private int snakeYaddress = 0;
+    private int[] snakePLACEMENTX = new int[400];
+    private int[] snakePLACEMENTY = new int[400];
 
     private boolean leftGoing = false;
     private boolean rightGoing = false;
@@ -33,11 +27,9 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     private Timer timer;
 
     private int delay = 100;
-    private int lengthOfSnake = 3;
+    private int lengthOfSnake = 100;
     private int moves = 0;
-
-
-
+    boolean setupFIRST = true;
 
 
     /**************************************************************************
@@ -53,48 +45,31 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     }
 
 
-
-
     /**************************************************************************
      DEFINES
      **************************************************************************/
     public void paint(Graphics graphics) {
-        if (moves == 0) {
+        if (setupFIRST) {
             snakeBodyImage = new ImageIcon("Body.png");
             snakeHeadImage = new ImageIcon("Head.png");
             snakeEmptyImage = new ImageIcon("Empty.png");
             graphics.setColor(Color.WHITE);
-            /*snakeXposition[2] = 0;
-            snakeXposition[1] = 40;
-            snakeXposition[0] = 80;
-
-            snakeYposition[2] = 0;
-            snakeYposition[1] = 0;
-            snakeYposition[0] = 0;
-
-
-            snakeHeadImage.paintIcon(this, graphics, snakeXposition[0], snakeYposition[0]);
-            snakeBodyImage.paintIcon(this, graphics, snakeXposition[1], snakeYposition[1]);
-            snakeBodyImage.paintIcon(this, graphics, snakeXposition[2], snakeYposition[2]);*/
+            setupFIRST = false;
         }
-        snakeEmptyImage.paintIcon(this, graphics, snakeDATAX[snakeOLDX], snakeDATAY[snakeOLDY]);
-        snakeHeadImage.paintIcon(this, graphics, snakeDATAX[snakeXaddress], snakeDATAY[snakeYaddress]);
 
-        /*for (int a = 0; a < lengthOfSnake; a++) {
-            if (a == 0) {
-                if (upGoing || downGoing|| leftGoing|| rightGoing) {
-                    snakeHeadImage.paintIcon(this, graphics, snakeXposition[a], snakeYposition[a]);
-                }
-            } else if (a != 0) {
-                snakeBodyImage.paintIcon(this, graphics, snakeXposition[a], snakeYposition[a]);
+        
+
+        for (int i = 0; i <= lengthOfSnake+1; i++) {
+            if (i == 0) {
+                snakeHeadImage.paintIcon(this, graphics, snakePLACEMENTX[i], snakePLACEMENTY[i]);
+            } else if (i <= lengthOfSnake) {
+                snakeBodyImage.paintIcon(this, graphics, snakePLACEMENTX[i], snakePLACEMENTY[i]);
+            } else {
+                snakeEmptyImage.paintIcon(this, graphics, snakePLACEMENTX[i], snakePLACEMENTY[i]);
             }
-        }*/
-
+        }
         graphics.dispose();
     }
-
-
-
 
 
     /**************************************************************************
@@ -103,60 +78,51 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         timer.start();
-        /*for (int x = 0; x < 20; x++) {
-            for (int y = 0; y < 20; y++) {
-                snakeDATAX[x]=25;
-                snakeDATAY[y]=25;
-            }
-        }*/
 
 
-        //snakeDATAX[snakeXaddress] = 25;
-       // snakeDATAY[snakeXaddress] = 25;
-        snakeOLDX = snakeXaddress;
-        snakeOLDY = snakeYaddress;
+        for (int i = 399; i > 0; i--) {
+            snakePLACEMENTX[i] = snakePLACEMENTX[i - 1];
+            snakePLACEMENTY[i] = snakePLACEMENTY[i - 1];
+        }
+
+
         if (rightGoing) {
             System.out.println("rightGoing");
-            snakeXaddress++;
-            if (snakeXaddress >= 20) {
-                snakeXaddress = 0;
+            snakePLACEMENTX[0] = snakePLACEMENTX[1] + 40;
+
+            if (snakePLACEMENTX[0] >= 800) {
+                snakePLACEMENTX[0] = 0;
             }
-            snakeDATAX[snakeXaddress] = snakeAddress[snakeXaddress];
         }
-        else if (leftGoing) {
+
+        if (leftGoing) {
             System.out.println("leftGoing");
-            snakeXaddress--;
-            if (snakeXaddress < 0) {
-                snakeXaddress = 19;
+            snakePLACEMENTX[0] = snakePLACEMENTX[1] - 40;
+
+            if (snakePLACEMENTX[0] < 0) {
+                snakePLACEMENTX[0] = 800;
             }
-            snakeDATAX[snakeXaddress] = snakeAddress[snakeXaddress];
         }
 
-        else if (downGoing) {
+        if (downGoing) {
             System.out.println("downGoing");
-            snakeYaddress++;
-            if (snakeYaddress >= 20) {
-                snakeYaddress = 0;
+            snakePLACEMENTY[0] = snakePLACEMENTY[1] + 40;
+
+            if (snakePLACEMENTY[0] >= 800) {
+                snakePLACEMENTY[0] = 0;
             }
-            snakeDATAY[snakeYaddress] = snakeAddress[snakeYaddress];
         }
-        else if (upGoing) {
+
+        if (upGoing) {
             System.out.println("upGoing");
-            snakeYaddress--;
-            if (snakeYaddress < 0) {
-                snakeYaddress = 19;
+            snakePLACEMENTY[0] = snakePLACEMENTY[1] - 40;
+
+            if (snakePLACEMENTY[0] < 0) {
+                snakePLACEMENTY[0] = 800;
             }
-            snakeDATAY[snakeYaddress] = snakeAddress[snakeYaddress];
-
         }
-
-
-
         repaint();
-
     }
-
-
 
 
     /**************************************************************************
@@ -168,8 +134,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     }
 
 
-
-
     /**************************************************************************
      KEY PRESS TRIGGER
      **************************************************************************/
@@ -177,7 +141,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     public void keyPressed(KeyEvent e) {
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            moves ++;
+
             rightGoing = true;
             if (!leftGoing) {
                 rightGoing = true;
@@ -188,21 +152,22 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             upGoing = false;
             downGoing = false;
         }
+
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                moves++;
+
+            leftGoing = true;
+            if (!rightGoing) {
                 leftGoing = true;
-                if (!rightGoing) {
-                    leftGoing = true;
-                } else {
-                    leftGoing = false;
-                    rightGoing = true;
-                }
-                upGoing = false;
-                downGoing = false;
+            } else {
+                leftGoing = false;
+                rightGoing = true;
+            }
+            upGoing = false;
+            downGoing = false;
         }
 
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            moves++;
+
             upGoing = true;
             if (!downGoing) {
                 upGoing = true;
@@ -215,7 +180,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            moves++;
+
             downGoing = true;
             if (!upGoing) {
                 downGoing = true;
@@ -227,8 +192,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             rightGoing = false;
         }
     }
-
-
 
 
     /**************************************************************************
