@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 
 public class Gameplay extends JPanel implements KeyListener, ActionListener {
@@ -23,15 +24,18 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     private ImageIcon snakeHeadImage;
     private ImageIcon snakeBodyImage;
     private ImageIcon snakeEmptyImage;
+    private ImageIcon snakeEnemyImage;
 
     private Timer timer;
 
     private int delay = 100;
-    private int lengthOfSnake = 100;
+    private int lengthOfSnake = 390;
     private int moves = 0;
     boolean setupFIRST = true;
 
-
+    Random random = new Random();
+    private int randomNumX=0;
+    private int randomNumY=0;
     /**************************************************************************
      Default Things to setup for Class
      **************************************************************************/
@@ -41,6 +45,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         setFocusTraversalKeysEnabled(false);
         timer = new Timer(delay, this);
         timer.start();
+
 
     }
 
@@ -53,11 +58,15 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             snakeBodyImage = new ImageIcon("Body.png");
             snakeHeadImage = new ImageIcon("Head.png");
             snakeEmptyImage = new ImageIcon("Empty.png");
+            snakeEnemyImage = new ImageIcon("Enemy.png");
             graphics.setColor(Color.WHITE);
+            while (!foodCreate());
+            snakeEnemyImage.paintIcon(this, graphics, randomNumX, randomNumY);
             setupFIRST = false;
+
         }
 
-        
+
 
         for (int i = 0; i <= lengthOfSnake+1; i++) {
             if (i == 0) {
@@ -68,7 +77,47 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
                 snakeEmptyImage.paintIcon(this, graphics, snakePLACEMENTX[i], snakePLACEMENTY[i]);
             }
         }
+
+        if (foodEatedCheck()) {
+            while (!foodCreate());
+            snakeEnemyImage.paintIcon(this, graphics, randomNumX, randomNumY);
+            lengthOfSnake++;
+
+        }
+
+
+
+
         graphics.dispose();
+    }
+
+
+
+    public boolean foodCreate() {
+
+        randomNumY = random.nextInt(20) ;
+        randomNumX = random.nextInt(20) ;
+        randomNumY *= 40;
+        randomNumX *= 40;
+
+        for (int i = 0; i <= lengthOfSnake+1; i++) {
+            if (snakePLACEMENTX[i] == randomNumX && snakePLACEMENTY[i] == randomNumY) {
+                    return false;
+            }
+        }
+        System.out.print("FOOD CREATED :");
+        System.out.print(randomNumX);
+        System.out.print(" And ");
+        System.out.println(randomNumY);
+        return true;
+    }
+
+
+    public boolean foodEatedCheck() {
+        if (snakePLACEMENTX[0] == randomNumX && snakePLACEMENTY[0] == randomNumY) {
+            return true;
+        }
+        return false;
     }
 
 
@@ -87,7 +136,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
 
         if (rightGoing) {
-            System.out.println("rightGoing");
             snakePLACEMENTX[0] = snakePLACEMENTX[1] + 40;
 
             if (snakePLACEMENTX[0] >= 800) {
@@ -96,7 +144,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         }
 
         if (leftGoing) {
-            System.out.println("leftGoing");
             snakePLACEMENTX[0] = snakePLACEMENTX[1] - 40;
 
             if (snakePLACEMENTX[0] < 0) {
@@ -105,7 +152,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         }
 
         if (downGoing) {
-            System.out.println("downGoing");
             snakePLACEMENTY[0] = snakePLACEMENTY[1] + 40;
 
             if (snakePLACEMENTY[0] >= 800) {
@@ -114,7 +160,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         }
 
         if (upGoing) {
-            System.out.println("upGoing");
             snakePLACEMENTY[0] = snakePLACEMENTY[1] - 40;
 
             if (snakePLACEMENTY[0] < 0) {
