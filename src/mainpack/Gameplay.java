@@ -11,10 +11,17 @@ import java.util.Random;
 
 public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
-    private ImageIcon titleImage;
-
     private int[] snakePLACEMENTX = new int[400];
     private int[] snakePLACEMENTY = new int[400];
+    private int delay = 200;
+    private int lengthOfSnake = 2;
+    private int moves = 0;
+    private int randomNumX=0;
+    private int randomNumY=0;
+    private int borderLimitLeftX = 0;
+    private int borderLimitRightX = 400;
+    private int borderLimitUpY = 0;
+    private int borderLimitDownY = 400;
 
     private boolean leftGoing = false;
     private boolean rightGoing = false;
@@ -28,14 +35,12 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     private Timer timer;
 
-    private int delay = 100;
-    private int lengthOfSnake = 390;
-    private int moves = 0;
+    Rectangle gaemBox = new Rectangle(borderLimitLeftX,borderLimitUpY,borderLimitRightX,borderLimitDownY);
     boolean setupFIRST = true;
+    boolean movementIsDone = false;
 
     Random random = new Random();
-    private int randomNumX=0;
-    private int randomNumY=0;
+
     /**************************************************************************
      Default Things to setup for Class
      **************************************************************************/
@@ -45,8 +50,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         setFocusTraversalKeysEnabled(false);
         timer = new Timer(delay, this);
         timer.start();
-
-
     }
 
 
@@ -54,16 +57,17 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
      DEFINES
      **************************************************************************/
     public void paint(Graphics graphics) {
+
         if (setupFIRST) {
             snakeBodyImage = new ImageIcon("Body.png");
             snakeHeadImage = new ImageIcon("Head.png");
             snakeEmptyImage = new ImageIcon("Empty.png");
             snakeEnemyImage = new ImageIcon("Enemy.png");
-            graphics.setColor(Color.WHITE);
+            graphics.setColor(Color.red);
             while (!foodCreate());
             snakeEnemyImage.paintIcon(this, graphics, randomNumX, randomNumY);
             setupFIRST = false;
-
+            graphics.drawRect(0,0,450,450);
         }
 
 
@@ -134,37 +138,28 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             snakePLACEMENTY[i] = snakePLACEMENTY[i - 1];
         }
 
-
-        if (rightGoing) {
+        if (snakePLACEMENTX[1] >= borderLimitRightX) {
+            snakePLACEMENTX[0] = borderLimitLeftX;
+        } else if (rightGoing) {
             snakePLACEMENTX[0] = snakePLACEMENTX[1] + 40;
-
-            if (snakePLACEMENTX[0] >= 800) {
-                snakePLACEMENTX[0] = 0;
-            }
         }
 
-        if (leftGoing) {
+        if (snakePLACEMENTX[1] < borderLimitLeftX) {
+            snakePLACEMENTX[0] = borderLimitRightX;
+        } else if (leftGoing) {
             snakePLACEMENTX[0] = snakePLACEMENTX[1] - 40;
-
-            if (snakePLACEMENTX[0] < 0) {
-                snakePLACEMENTX[0] = 800;
-            }
         }
 
-        if (downGoing) {
+        if (snakePLACEMENTY[1] >= borderLimitDownY) {
+            snakePLACEMENTY[0] = borderLimitUpY;
+        } else if (downGoing) {
             snakePLACEMENTY[0] = snakePLACEMENTY[1] + 40;
-
-            if (snakePLACEMENTY[0] >= 800) {
-                snakePLACEMENTY[0] = 0;
-            }
         }
 
-        if (upGoing) {
+        if (snakePLACEMENTY[1] < borderLimitUpY) {
+            snakePLACEMENTY[0] = borderLimitDownY;
+        } else if (upGoing) {
             snakePLACEMENTY[0] = snakePLACEMENTY[1] - 40;
-
-            if (snakePLACEMENTY[0] < 0) {
-                snakePLACEMENTY[0] = 800;
-            }
         }
         repaint();
     }
@@ -197,8 +192,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             upGoing = false;
             downGoing = false;
         }
-
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+        else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 
             leftGoing = true;
             if (!rightGoing) {
@@ -211,7 +205,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             downGoing = false;
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_UP) {
+        else if (e.getKeyCode() == KeyEvent.VK_UP) {
 
             upGoing = true;
             if (!downGoing) {
@@ -224,7 +218,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             rightGoing = false;
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+        else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 
             downGoing = true;
             if (!upGoing) {
