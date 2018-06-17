@@ -13,20 +13,21 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     private int[] snakePLACEMENTX = new int[400];
     private int[] snakePLACEMENTY = new int[400];
-    private int delay = 200;
+    private int delay = 100;
     private int lengthOfSnake = 2;
     private int moves = 0;
     private int randomNumX=0;
     private int randomNumY=0;
     private int borderLimitLeftX = 0;
-    private int borderLimitRightX = 400;
+    private int borderLimitRightX = 800;
     private int borderLimitUpY = 0;
-    private int borderLimitDownY = 400;
+    private int borderLimitDownY = 800;
 
     private boolean leftGoing = false;
     private boolean rightGoing = false;
     private boolean upGoing = false;
     private boolean downGoing = false;
+    private boolean yeahItWentOutOfSide = false;
 
     private ImageIcon snakeHeadImage;
     private ImageIcon snakeBodyImage;
@@ -67,7 +68,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             while (!foodCreate());
             snakeEnemyImage.paintIcon(this, graphics, randomNumX, randomNumY);
             setupFIRST = false;
-            graphics.drawRect(0,0,450,450);
+            graphics.drawRect(0,0,810,810);
         }
 
 
@@ -138,6 +139,50 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             snakePLACEMENTY[i] = snakePLACEMENTY[i - 1];
         }
 
+
+
+        if (rightGoing) {
+            snakePLACEMENTX[0] = snakePLACEMENTX[1] + 40;
+
+        } else if (leftGoing) {
+            snakePLACEMENTX[0] = snakePLACEMENTX[1] - 40;
+
+        } else if (downGoing) {
+            snakePLACEMENTY[0] = snakePLACEMENTY[1] + 40;
+
+        } else if (upGoing) {
+            snakePLACEMENTY[0] = snakePLACEMENTY[1] - 40;
+        }
+
+
+        if (snakePLACEMENTX[0] > borderLimitRightX) {
+            snakePLACEMENTX[0] = borderLimitLeftX;
+            yeahItWentOutOfSide = true;
+            System.out.println("snakePLACEMENTX[1] >= borderLimitRightX");
+
+        } else if (snakePLACEMENTX[0] < borderLimitLeftX) {
+            snakePLACEMENTX[0] = borderLimitRightX;
+            yeahItWentOutOfSide = true;
+            System.out.println("snakePLACEMENTX[1] < borderLimitLeftX");
+
+        } else if (snakePLACEMENTY[0] > borderLimitDownY) {
+            snakePLACEMENTY[0] = borderLimitUpY;
+            yeahItWentOutOfSide = true;
+            System.out.println("snakePLACEMENTY[1] >= borderLimitDownY");
+
+        } else if (snakePLACEMENTY[0] < borderLimitUpY) {
+            snakePLACEMENTY[0] = borderLimitDownY;
+            yeahItWentOutOfSide = true;
+            System.out.println("snakePLACEMENTY[1] < borderLimitUpY");
+
+        } else{
+            yeahItWentOutOfSide = false;
+            System.out.println("yeahItWentOutOfSide = false;");
+        }
+
+
+
+/*
         if (snakePLACEMENTX[1] >= borderLimitRightX) {
             snakePLACEMENTX[0] = borderLimitLeftX;
         } else if (rightGoing) {
@@ -150,6 +195,8 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             snakePLACEMENTX[0] = snakePLACEMENTX[1] - 40;
         }
 
+
+
         if (snakePLACEMENTY[1] >= borderLimitDownY) {
             snakePLACEMENTY[0] = borderLimitUpY;
         } else if (downGoing) {
@@ -160,7 +207,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             snakePLACEMENTY[0] = borderLimitDownY;
         } else if (upGoing) {
             snakePLACEMENTY[0] = snakePLACEMENTY[1] - 40;
-        }
+        }*/
         repaint();
     }
 
