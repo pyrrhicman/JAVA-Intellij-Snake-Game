@@ -19,9 +19,9 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     private int randomNumX=0;
     private int randomNumY=0;
     private int borderLimitLeftX = 0;
-    private int borderLimitRightX = 800;
+    private int borderLimitRightX = 760;
     private int borderLimitUpY = 0;
-    private int borderLimitDownY = 800;
+    private int borderLimitDownY = 760;
 
     private boolean leftGoing = false;
     private boolean rightGoing = false;
@@ -68,7 +68,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             while (!foodCreate());
             snakeEnemyImage.paintIcon(this, graphics, randomNumX, randomNumY);
             setupFIRST = false;
-            graphics.drawRect(0,0,810,810);
+            graphics.drawRect(-10,-10,810,810);
         }
 
 
@@ -87,6 +87,24 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             while (!foodCreate());
             snakeEnemyImage.paintIcon(this, graphics, randomNumX, randomNumY);
             lengthOfSnake++;
+
+        }
+
+        if (itIsNotGood()) {
+            for (int i = 0; i <= 399; i++) {
+
+                for (int x = 0; x <= 399; x++) {
+                snakeEmptyImage.paintIcon(this, graphics, snakePLACEMENTX[i], snakePLACEMENTY[x]);
+                }
+            }
+
+                lengthOfSnake = 3;
+            rightGoing = false;
+            upGoing = false;
+            downGoing = false;
+            leftGoing = false;
+            snakePLACEMENTX[0] = 0;
+            snakePLACEMENTY[0] = 0;
 
         }
 
@@ -125,6 +143,22 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         return false;
     }
 
+    public boolean itIsNotGood() {
+        for (int i = 1; i <= lengthOfSnake; i++) {
+            if (snakePLACEMENTX[0] == snakePLACEMENTX[i]) {
+                if (snakePLACEMENTY[0] == snakePLACEMENTY[i]) {
+                    return true;
+                }
+            }
+            if (snakePLACEMENTY[0] == snakePLACEMENTY[i]) {
+                if (snakePLACEMENTX[0] == snakePLACEMENTX[i]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+
+    }
 
     /**************************************************************************
      Timer CALL
@@ -239,7 +273,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             upGoing = false;
             downGoing = false;
         }
-        else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 
             leftGoing = true;
             if (!rightGoing) {
@@ -252,7 +286,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             downGoing = false;
         }
 
-        else if (e.getKeyCode() == KeyEvent.VK_UP) {
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
 
             upGoing = true;
             if (!downGoing) {
@@ -265,7 +299,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             rightGoing = false;
         }
 
-        else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 
             downGoing = true;
             if (!upGoing) {
