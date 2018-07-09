@@ -28,7 +28,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     private boolean upGoing = false;
     private boolean downGoing = false;
     private boolean yeahItWentOutOfSide = false;
-
+    private boolean foodCreated = true;
     private ImageIcon snakeHeadImage;
     private ImageIcon snakeBodyImage;
     private ImageIcon snakeEmptyImage;
@@ -97,12 +97,13 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
                 snakeEmptyImage.paintIcon(this, graphics, snakePLACEMENTX[i], snakePLACEMENTY[x]);
                 }
             }
-
-                lengthOfSnake = 3;
+            while (!foodCreate());
+            snakeEnemyImage.paintIcon(this, graphics, randomNumX, randomNumY);7´s
+            lengthOfSnake = 3;
             rightGoing = false;
             upGoing = false;
             downGoing = false;
-            leftGoing = false;
+            leftGoing = true;
             snakePLACEMENTX[0] = 0;
             snakePLACEMENTY[0] = 0;
 
@@ -118,16 +119,17 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
     public boolean foodCreate() {
 
-        randomNumY = random.nextInt(20) ;
-        randomNumX = random.nextInt(20) ;
-        randomNumY *= 40;
-        randomNumX *= 40;
+            randomNumX = random.nextInt(19) ;
+            randomNumY = random.nextInt(19) ;
+            randomNumX *= 40;
+            randomNumY *= 40;
 
-        for (int i = 0; i <= lengthOfSnake+1; i++) {
-            if (snakePLACEMENTX[i] == randomNumX && snakePLACEMENTY[i] == randomNumY) {
-                    return false;
+            for (int i = 0; i <= lengthOfSnake+1; i++) {
+                if ((snakePLACEMENTX[i] == randomNumX) && (snakePLACEMENTY[i] == randomNumY)) {
+                    System.out.println("Trying for food... :");
+                    return true;
+                }
             }
-        }
         System.out.print("FOOD CREATED :");
         System.out.print(randomNumX);
         System.out.print(" And ");
@@ -137,8 +139,11 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
 
     public boolean foodEatedCheck() {
-        if (snakePLACEMENTX[0] == randomNumX && snakePLACEMENTY[0] == randomNumY) {
-            return true;
+
+        for (int i = 0; i <= lengthOfSnake; i++) {
+            if (snakePLACEMENTX[i] == randomNumX && snakePLACEMENTY[i] == randomNumY) {
+                return true;
+            }
         }
         return false;
     }
@@ -209,9 +214,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             yeahItWentOutOfSide = true;
             System.out.println("snakePLACEMENTY[1] < borderLimitUpY");
 
-        } else{
-            yeahItWentOutOfSide = false;
-            System.out.println("yeahItWentOutOfSide = false;");
         }
 
 
