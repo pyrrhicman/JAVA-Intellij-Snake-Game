@@ -98,7 +98,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
                 }
             }
             while (!foodCreate());
-            snakeEnemyImage.paintIcon(this, graphics, randomNumX, randomNumY);7´s
+            snakeEnemyImage.paintIcon(this, graphics, randomNumX, randomNumY);
             lengthOfSnake = 3;
             rightGoing = false;
             upGoing = false;
