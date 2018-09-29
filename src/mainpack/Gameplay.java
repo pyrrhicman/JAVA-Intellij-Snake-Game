@@ -50,8 +50,8 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
      **************************************************************************/
     public void paint(Graphics graphics) {
         if (setupFIRST) {
-            snakeBodyImage = new ImageIcon("Body.png");
-            snakeHeadImage = new ImageIcon("Head.png");
+            snakeBodyImage = new ImageIcon("square2.png");
+            snakeHeadImage = new ImageIcon("square1.png");
             snakeEmptyImage = new ImageIcon("Empty.png");
             graphics.setColor(Color.WHITE);
             setupFIRST = false;

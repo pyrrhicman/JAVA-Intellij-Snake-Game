@@ -1,22 +1,47 @@
 package mainpack;
 
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class Main {
-    public static void main (String[] args){
-        JFrame obj = new JFrame();
-        Gameplay gameplay = new Gameplay();
+import static javafx.application.Application.launch;
 
-        obj.setBounds(100, 100, 820, 840);
-        obj.setBackground(Color.WHITE);
-        //obj.setResizable(false);
-        obj.setTitle("Snake Game");
+public class Main implements Initializable {
 
-        obj.setVisible(true);
-        obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        obj.add(gameplay);
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        try {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            InputStream inputStream =       getClass().getResource("gameon").openStream();
+            Pane pane = loader.load(inputStream);
+
+            Scene scene = new Scene(pane);
+            stage.setScene(scene);
+            //scene.getStylesheets().add("/css/stylesheet.css");
+            stage.setTitle("New Game");
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setResizable(true);
+
+            //stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
 
 
+        } catch (IOException ex) { ex.printStackTrace(); }
     }
 }
